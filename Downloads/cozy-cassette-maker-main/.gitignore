@@ -12,17 +12,6 @@ dist
 dist-ssr
 *.local
 
-# macOS
-.DS_Store
-
-# Node
-node_modules/
-dist/
-.env
-
-# VS Code
-.vscode/
-
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
