@@ -15,7 +15,9 @@ export const CassetteTape = ({
   className,
   title = "" 
 }: CassetteTapeProps) => {
-  const darkerBodyStroke = bodyColor === "#D4A574" ? "#8c6b4a" : "#2D2D2D";
+  // Gövde renginin koyu tonunu hesapla (Konturlar için)
+  const isTransparent = bodyColor.startsWith("rgba"); // Şeffaf kaset kontrolü
+  const strokeColor = isTransparent ? "rgba(0,0,0,0.5)" : "#2D2D2D";
 
   return (
     <svg
@@ -24,103 +26,144 @@ export const CassetteTape = ({
       xmlns="http://www.w3.org/2000/svg"
     >
       <defs>
-        <linearGradient id="plasticGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-          <stop offset="0%" stopColor={bodyColor} stopOpacity="1" />
-          <stop offset="100%" stopColor={bodyColor} style={{ filter: "brightness(0.85)" }} stopOpacity="1" />
-        </linearGradient>
-        
-        <linearGradient id="windowReflection" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#ffffff" stopOpacity="0.4" />
-          <stop offset="40%" stopColor="#ffffff" stopOpacity="0.1" />
-          <stop offset="100%" stopColor="#ffffff" stopOpacity="0.3" />
+        {/* Plastik Gövde Dokusu */}
+        <linearGradient id="bodyGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stopColor={bodyColor} stopOpacity="0.9" />
+          <stop offset="50%" stopColor={bodyColor} stopOpacity="1" />
+          <stop offset="100%" stopColor={bodyColor} stopOpacity="0.8" />
         </linearGradient>
 
-        <radialGradient id="reelGradient" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
-           <stop offset="80%" stopColor="#e0e0e0" />
-           <stop offset="100%" stopColor="#bdbdbd" />
+        {/* Pencere Yansıması */}
+        <linearGradient id="windowGlass" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stopColor="#fff" stopOpacity="0.3" />
+          <stop offset="50%" stopColor="#fff" stopOpacity="0" />
+          <stop offset="100%" stopColor="#fff" stopOpacity="0.2" />
+        </linearGradient>
+
+        {/* Makara Efekti */}
+        <radialGradient id="reelSilver" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stopColor="#f5f5f5" />
+          <stop offset="100%" stopColor="#bdbdbd" />
         </radialGradient>
       </defs>
 
-      {/* GÖVDE */}
-      <rect x="10" y="10" width="380" height="230" rx="14" fill="url(#plasticGradient)" stroke={darkerBodyStroke} strokeWidth="3" />
+      {/* --- 1. GÖVDE --- */}
+      {/* Ana Kasa */}
+      <path
+        d="M 20 20 H 380 A 10 10 0 0 1 390 30 V 220 A 10 10 0 0 1 380 230 H 20 A 10 10 0 0 1 10 220 V 30 A 10 10 0 0 1 20 20 Z"
+        fill="url(#bodyGradient)"
+        stroke={strokeColor}
+        strokeWidth="2"
+      />
 
-      {/* VİDALAR */}
+      {/* Alt Çıkıntı (Trapez Alan) */}
+      <path
+        d="M 50 230 L 350 230 L 340 190 H 60 L 50 230 Z"
+        fill="rgba(0,0,0,0.2)"
+        stroke="none"
+      />
+
+      {/* Vidalar (4 Köşe + 1 Alt Orta) */}
       {[
-        [30, 30], [370, 30],
-        [30, 230], [370, 230],
-        [200, 235]
+        [25, 35], [375, 35], 
+        [25, 215], [375, 215], 
+        [200, 210]
       ].map((pos, i) => (
         <g key={i} transform={`translate(${pos[0]}, ${pos[1]})`}>
-           <circle cx="0" cy="0" r="5" fill="#555" stroke="#333" strokeWidth="1"/>
-           <path d="M-2 -2 L2 2 M-2 2 L2 -2" stroke="#222" strokeWidth="1.5" strokeLinecap="round"/>
+          <circle cx="0" cy="0" r="5" fill="#555" stroke="#222" strokeWidth="1"/>
+          <path d="M-3 0 H3 M0 -3 V3" stroke="#333" strokeWidth="1.5" strokeLinecap="round" transform="rotate(45)"/>
         </g>
       ))}
 
-      <path d="M60 240 L340 240 L325 185 L75 185 Z" fill="#2a2a2a" opacity="0.9" />
-      
-      {/* ETİKET */}
-      <path
-        d="M 40 45 H 360 A 5 5 0 0 1 365 50 V 160 A 5 5 0 0 1 360 165 H 280 A 50 50 0 0 0 120 165 H 40 A 5 5 0 0 1 35 160 V 50 A 5 5 0 0 1 40 45 Z"
+      {/* --- 2. ETİKET (STICKER) --- */}
+      {/* Üst Kısım Şerit Etiket */}
+      <rect
+        x="35" y="35" width="330" height="135"
+        rx="8"
         fill={labelColor}
-        stroke="#000000"
-        strokeOpacity="0.1"
+        stroke="rgba(0,0,0,0.1)"
         strokeWidth="1"
       />
-      <line x1="50" y1="70" x2="350" y2="70" stroke={darkerBodyStroke} strokeWidth="0.5" opacity="0.5" />
-      <line x1="50" y1="95" x2="350" y2="95" stroke={darkerBodyStroke} strokeWidth="0.5" opacity="0.5" />
-
-      {/* SOL MAKARA (DÖNER) */}
-      <g transform="translate(120, 125)">
-        <circle cx="0" cy="0" r="42" fill="#3D2817" stroke="#22150c" strokeWidth="1" />
-        <g 
-          className={isPlaying ? "animate-[spin_3s_linear_infinite]" : ""} 
-          style={{ transformOrigin: "0px 0px" }}
-        >
-          <circle cx="0" cy="0" r="28" fill="none" stroke="url(#reelGradient)" strokeWidth="4" />
-          <circle cx="0" cy="0" r="12" fill="#fff" />
-          {[0, 60, 120, 180, 240, 300].map((angle) => (
-            <rect key={angle} x="-3" y="-28" width="6" height="16" fill="#fff" transform={`rotate(${angle})`} rx="2"/>
-          ))}
-           <circle cx="0" cy="0" r="4" fill="#333" />
-        </g>
-      </g>
       
-      {/* SAĞ MAKARA (DÖNER) */}
-      <g transform="translate(280, 125)">
-        <circle cx="0" cy="0" r="32" fill="#3D2817" stroke="#22150c" strokeWidth="1" />
-        <g 
-          className={isPlaying ? "animate-[spin_3s_linear_infinite]" : ""} 
-          style={{ transformOrigin: "0px 0px" }}
-        >
-           <circle cx="0" cy="0" r="28" fill="none" stroke="url(#reelGradient)" strokeWidth="4" />
-           <circle cx="0" cy="0" r="12" fill="#fff" />
-           {[0, 60, 120, 180, 240, 300].map((angle) => (
-            <rect key={`r-${angle}`} x="-3" y="-28" width="6" height="16" fill="#fff" transform={`rotate(${angle})`} rx="2"/>
+      {/* Etiket Süslemeleri (Çizgiler) */}
+      <line x1="45" y1="55" x2="355" y2="55" stroke={bodyColor} strokeWidth="4" opacity="0.3" />
+      <line x1="45" y1="155" x2="355" y2="155" stroke={bodyColor} strokeWidth="12" opacity="0.2" />
+
+      {/* --- 3. ORTA PENCERE VE MAKARALAR --- */}
+      {/* Pencere Çerçevesi */}
+      <path
+        d="M 90 85 H 310 V 145 H 90 Z"
+        fill="#2D2D2D"
+        rx="5"
+      />
+      {/* Şeffaf Pencere */}
+      <rect x="130" y="90" width="140" height="50" rx="2" fill="rgba(255,255,255,0.2)" />
+
+      {/* SOL MAKARA */}
+      <g transform="translate(115, 115)">
+        {/* Bant (Kahverengi) */}
+        <circle cx="0" cy="0" r="38" fill="#4A3B2D" />
+        {/* Dönme Animasyonu */}
+        <g className={isPlaying ? "animate-[spin_3s_linear_infinite]" : ""} style={{ transformOrigin: "0px 0px" }}>
+          <circle cx="0" cy="0" r="22" fill="url(#reelSilver)" stroke="#666" strokeWidth="1" />
+          {/* Dişliler */}
+          {[0, 60, 120, 180, 240, 300].map((angle) => (
+            <path key={angle} d="M -3 -22 V -10 L 0 -6 L 3 -10 V -22 Z" fill="#fff" transform={`rotate(${angle})`} />
           ))}
-          <circle cx="0" cy="0" r="4" fill="#333" />
         </g>
       </g>
 
-      <rect x="155" y="118" width="90" height="14" fill="#3D2817" />
+      {/* SAĞ MAKARA */}
+      <g transform="translate(285, 115)">
+        {/* Bant (Daha az) */}
+        <circle cx="0" cy="0" r="28" fill="#4A3B2D" />
+        <g className={isPlaying ? "animate-[spin_3s_linear_infinite]" : ""} style={{ transformOrigin: "0px 0px" }}>
+          <circle cx="0" cy="0" r="22" fill="url(#reelSilver)" stroke="#666" strokeWidth="1" />
+          {[0, 60, 120, 180, 240, 300].map((angle) => (
+            <path key={angle} d="M -3 -22 V -10 L 0 -6 L 3 -10 V -22 Z" fill="#fff" transform={`rotate(${angle})`} />
+          ))}
+        </g>
+      </g>
 
-      {/* PENCERE */}
-      <path d="M 145 85 H 255 L 265 165 H 135 Z" fill="#90a4ae" opacity="0.25" stroke="#78909c" strokeWidth="1" />
-      <path d="M 145 85 H 255 L 265 165 H 135 Z" fill="url(#windowReflection)" opacity="0.6" pointerEvents="none" />
-      <line x1="190" y1="155" x2="190" y2="162" stroke="#fff" strokeWidth="1" opacity="0.8"/>
-      <line x1="210" y1="155" x2="210" y2="162" stroke="#fff" strokeWidth="1" opacity="0.8"/>
+      {/* Aradaki Bant */}
+      <rect x="140" y="108" width="120" height="14" fill="#4A3B2D" />
 
-      <rect x="80" y="188" width="240" height="12" fill="#2f1f13" />
-      <circle cx="90" cy="194" r="6" fill="#ddd" stroke="#999" strokeWidth="1"/>
-      <circle cx="310" cy="194" r="6" fill="#ddd" stroke="#999" strokeWidth="1"/>
-      <rect x="185" y="188" width="30" height="10" fill="#d7ccc8" rx="2" stroke="#a1887f" strokeWidth="1" />
-      <rect x="192" y="192" width="16" height="2" fill="#5d4037" rx="1" />
+      {/* Pencere Üzerindeki Yazılar */}
+      <text x="200" y="138" textAnchor="middle" fill="#fff" fontSize="8" fontFamily="monospace" opacity="0.8">100 50 0</text>
 
-      {/* KASET ADI */}
-      <text x="200" y="80" textAnchor="middle" fill="#2D2D2D" style={{ fontFamily: "'Rock Salt', cursive", fontSize: "20px", opacity: 0.85, transform: "rotate(-1deg)" }} className="pointer-events-none select-none">
+      {/* --- 4. ALT MEKANİZMA --- */}
+      {/* Manyetik Bant */}
+      <rect x="90" y="195" width="220" height="12" fill="#291B12" />
+      {/* Metal Baskı Parçası */}
+      <rect x="185" y="195" width="30" height="12" fill="#D7CCC8" rx="2" />
+      <rect x="192" y="200" width="16" height="3" fill="#5D4037" rx="1" />
+      
+      {/* Delikler */}
+      <circle cx="130" cy="201" r="5" fill="#000" />
+      <circle cx="270" cy="201" r="5" fill="#000" />
+
+      {/* --- 5. KASET ADI --- */}
+      <text
+        x="200" 
+        y="78" 
+        textAnchor="middle" 
+        fill="#2D2D2D" 
+        style={{ 
+          fontFamily: "'Patrick Hand', cursive", // El yazısı
+          fontSize: "24px",
+          fontWeight: "bold",
+          opacity: 0.85,
+          letterSpacing: "0.5px"
+        }}
+        className="pointer-events-none select-none"
+      >
         {title}
       </text>
-      <text x="55" y="60" fill={darkerBodyStroke} fontSize="10" fontFamily="sans-serif" fontWeight="900" opacity="0.5">A</text>
-      <text x="345" y="60" fill={darkerBodyStroke} fontSize="8" fontFamily="sans-serif" fontWeight="bold" opacity="0.5" textAnchor="end">60 MIN</text>
+
+      {/* A Yüzü */}
+      <text x="50" y="52" fill="#2D2D2D" fontSize="14" fontWeight="bold" opacity="0.5" fontFamily="sans-serif">A</text>
+      <text x="350" y="52" textAnchor="end" fill="#2D2D2D" fontSize="10" fontWeight="bold" opacity="0.5" fontFamily="sans-serif">C-60</text>
+
     </svg>
   );
 };
