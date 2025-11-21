@@ -5,11 +5,13 @@ CREATE TABLE IF NOT EXISTS public.mixtapes (
   from_name TEXT NOT NULL,
   message TEXT NOT NULL,
   youtube_link TEXT NOT NULL,
+
   cassette_body_color TEXT NOT NULL DEFAULT '#D4A574',
   cassette_label_color TEXT NOT NULL DEFAULT '#F5E6D3',
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
+ALTER TABLE public.mixtapes ADD COLUMN IF NOT EXISTS title TEXT;
 -- Enable Row Level Security
 ALTER TABLE public.mixtapes ENABLE ROW LEVEL SECURITY;
 

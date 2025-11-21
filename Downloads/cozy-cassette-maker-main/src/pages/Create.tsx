@@ -73,6 +73,7 @@ const Create = () => {
             youtube_link: youtubeLink,
             cassette_body_color: bodyColor,
             cassette_label_color: labelColor,
+            title: cassetteTitle || "Mixtape", // BAŞLIK BURADA KAYDEDİLİYOR
           },
         ])
         .select()
@@ -98,11 +99,9 @@ const Create = () => {
     }
   };
 
-  // --- LANDING SAYFASI TASARIMI (Resim 1) ---
   if (step === "landing") {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center p-6 relative overflow-hidden font-handwriting">
-        {/* Düzeltilen Satır: opacity-10 kaldırıldı, sadece opacity-5 bırakıldı */}
         <div className="absolute inset-0 pointer-events-none bg-[url('/placeholder.svg')] bg-repeat opacity-5" />
         
         <div className="max-w-md w-full space-y-12 z-10">
@@ -146,19 +145,16 @@ const Create = () => {
             </div>
           </div>
 
-          {/* Alt kısımdaki dekoratif kaset */}
           <div className="transform scale-75 opacity-80 hover:opacity-100 transition-opacity duration-500">
-             <CassetteTape bodyColor="#2d4a6d" labelColor="#F5E6D3" />
+             <CassetteTape bodyColor="#2d4a6d" labelColor="#F5E6D3" title="Örnek Kaset" />
           </div>
         </div>
       </div>
     );
   }
 
-  // --- OLUŞTURMA SAYFASI TASARIMI (Resim 2) ---
   return (
     <div className="min-h-screen flex p-4 md:p-8 gap-8 font-handwriting">
-      {/* SOL PANEL - DÜZENLEME */}
       <div className="w-full md:w-1/2 lg:w-5/12 flex flex-col h-[calc(100vh-4rem)]">
         <div className="bg-white/90 backdrop-blur rounded-[2rem] p-8 shadow-xl border-4 border-white overflow-y-auto scrollbar-hide h-full">
           
@@ -167,7 +163,6 @@ const Create = () => {
           </h2>
 
           <div className="space-y-8">
-            {/* Renk Seçimi */}
             <div className="space-y-3">
               <Label className="text-xl text-primary/80">GÖVDE RENGİ</Label>
               <div className="flex gap-3 flex-wrap">
@@ -202,7 +197,6 @@ const Create = () => {
               </div>
             </div>
 
-            {/* Kaset Başlığı */}
             <div className="space-y-2">
               <Label className="text-xl text-primary/80">KASET ADI</Label>
               <Input
@@ -281,7 +275,6 @@ const Create = () => {
         </div>
       </div>
 
-      {/* SAĞ PANEL - ÖNİZLEME */}
       <div className="hidden md:flex w-1/2 lg:w-7/12 items-center justify-center relative">
         <div className="border-2 border-white/50 rounded-3xl p-12 w-full max-w-2xl bg-white/20 backdrop-blur-sm shadow-2xl relative">
           <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-white/30 px-6 py-1 rounded-full text-white text-sm font-sans">
@@ -292,16 +285,8 @@ const Create = () => {
             <CassetteTape 
               bodyColor={bodyColor} 
               labelColor={labelColor} 
-              // Not: CassetteTape bileşenin 'title' prop'u kabul etmesi gerekebilir.
-              // Eğer CassetteTape bileşenini güncellemezseniz bu prop çalışmaz.
-              // className="drop-shadow-2xl"
+              title={cassetteTitle || "Kaset Adı"}
             />
-            {/* Kaset üzerine yazı yazdırmak için basit bir overlay (eğer SVG desteklemiyorsa) */}
-            <div className="absolute top-[58%] left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[60%] text-center pointer-events-none">
-              <p className="text-2xl font-bold text-primary/80 truncate" style={{ fontFamily: "'Rock Salt', cursive" }}>
-                {cassetteTitle}
-              </p>
-            </div>
           </div>
         </div>
       </div>

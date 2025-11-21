@@ -1,0 +1,1 @@
+ALTER TABLE public.mixtapes ADD COLUMN IF NOT EXISTS title TEXT;

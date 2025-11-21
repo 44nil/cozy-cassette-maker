@@ -41,10 +41,10 @@ export const CassetteTape = ({
         </radialGradient>
       </defs>
 
-      {/* --- 1. ANA GÖVDE --- */}
+      {/* GÖVDE */}
       <rect x="10" y="10" width="380" height="230" rx="14" fill="url(#plasticGradient)" stroke={darkerBodyStroke} strokeWidth="3" />
 
-      {/* Vidalar */}
+      {/* VİDALAR */}
       {[
         [30, 30], [370, 30],
         [30, 230], [370, 230],
@@ -56,10 +56,9 @@ export const CassetteTape = ({
         </g>
       ))}
 
-      {/* Alt Bant Yolu */}
       <path d="M60 240 L340 240 L325 185 L75 185 Z" fill="#2a2a2a" opacity="0.9" />
       
-      {/* --- 2. ETİKET --- */}
+      {/* ETİKET */}
       <path
         d="M 40 45 H 360 A 5 5 0 0 1 365 50 V 160 A 5 5 0 0 1 360 165 H 280 A 50 50 0 0 0 120 165 H 40 A 5 5 0 0 1 35 160 V 50 A 5 5 0 0 1 40 45 Z"
         fill={labelColor}
@@ -70,14 +69,9 @@ export const CassetteTape = ({
       <line x1="50" y1="70" x2="350" y2="70" stroke={darkerBodyStroke} strokeWidth="0.5" opacity="0.5" />
       <line x1="50" y1="95" x2="350" y2="95" stroke={darkerBodyStroke} strokeWidth="0.5" opacity="0.5" />
 
-      {/* --- 3. MAKARALAR VE BANT (SADECE BURASI DÖNECEK) --- */}
-      
-      {/* Sol Makara */}
+      {/* SOL MAKARA (DÖNER) */}
       <g transform="translate(120, 125)">
-        {/* Sabit kahverengi bant (dönmez) */}
         <circle cx="0" cy="0" r="42" fill="#3D2817" stroke="#22150c" strokeWidth="1" />
-        
-        {/* Dönen iç kısım (Tekerlek) */}
         <g 
           className={isPlaying ? "animate-[spin_3s_linear_infinite]" : ""} 
           style={{ transformOrigin: "0px 0px" }}
@@ -91,12 +85,9 @@ export const CassetteTape = ({
         </g>
       </g>
       
-      {/* Sağ Makara */}
+      {/* SAĞ MAKARA (DÖNER) */}
       <g transform="translate(280, 125)">
-        {/* Sabit kahverengi bant (dönmez) */}
         <circle cx="0" cy="0" r="32" fill="#3D2817" stroke="#22150c" strokeWidth="1" />
-        
-        {/* Dönen iç kısım (Tekerlek) */}
         <g 
           className={isPlaying ? "animate-[spin_3s_linear_infinite]" : ""} 
           style={{ transformOrigin: "0px 0px" }}
@@ -110,10 +101,9 @@ export const CassetteTape = ({
         </g>
       </g>
 
-      {/* Bant şeridi */}
       <rect x="155" y="118" width="90" height="14" fill="#3D2817" />
 
-      {/* --- 4. DİĞER DETAYLAR --- */}
+      {/* PENCERE */}
       <path d="M 145 85 H 255 L 265 165 H 135 Z" fill="#90a4ae" opacity="0.25" stroke="#78909c" strokeWidth="1" />
       <path d="M 145 85 H 255 L 265 165 H 135 Z" fill="url(#windowReflection)" opacity="0.6" pointerEvents="none" />
       <line x1="190" y1="155" x2="190" y2="162" stroke="#fff" strokeWidth="1" opacity="0.8"/>
@@ -125,7 +115,7 @@ export const CassetteTape = ({
       <rect x="185" y="188" width="30" height="10" fill="#d7ccc8" rx="2" stroke="#a1887f" strokeWidth="1" />
       <rect x="192" y="192" width="16" height="2" fill="#5d4037" rx="1" />
 
-      {/* Başlık */}
+      {/* KASET ADI */}
       <text x="200" y="80" textAnchor="middle" fill="#2D2D2D" style={{ fontFamily: "'Rock Salt', cursive", fontSize: "20px", opacity: 0.85, transform: "rotate(-1deg)" }} className="pointer-events-none select-none">
         {title}
       </text>
